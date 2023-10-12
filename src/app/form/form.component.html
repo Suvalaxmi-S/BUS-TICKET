@@ -1,43 +1,67 @@
 <div *ngIf="canBook">
   <div class="center-form">
     <div class="form-container">
-      <p>Total Cost:{{ Cost }}</p>
-          <div class="main" *ngFor="let obj of select;let i=index">
-            <p>Seat No:{{ obj.Seat_No }}</p>
+      <form #myForm="ngForm" (ngSubmit)="display()">
+        <p>Total Cost:{{ Cost }}</p>
+        <div class="main" *ngFor="let obj of select; let i = index">
+          <p>Seat No:{{ obj.Seat_No }}</p>
 
-            <div class="name">
-              <label for="name">Name:</label>
-              <input type="text" [(ngModel)]="names[i]" />
-          
+          <div class="name">
+            <label for="name">Name:</label>
+            <input
+              type="text"
+              [(ngModel)]="names[i]"
+              name="name{{ i }}"
+              #name="ngModel"
+              required
+            />
+            <div *ngIf="name.invalid && (name.dirty || name.touched)">
+              <p class="error-message">Name is required.</p>
             </div>
-            
-            <div class="gender">
-              <label for="gender">Gender:</label>
-              <select id="gender"[(ngModel)]="gender[i]">
-                <option *ngIf="!obj.only_female" value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
+          </div>
+
+          <div class="gender">
+            <label for="gender">Gender:</label>
+            <select
+              id="gender"
+              [(ngModel)]="gender[i]"
+              name="gender{{ i }}"
+              #genderModel="ngModel"
+              required
+            >
+              <option *ngIf="!obj.only_female" value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+            <div *ngIf="genderModel.invalid && (genderModel.dirty || genderModel.touched)">
+              <p class="error-message">Gender is required.</p>
             </div>
-            
-            <div class="age">
-              <label for="age">AGE:</label>
-              <input type="number" [(ngModel)]="ages[i]" min="5" max="99" />
-    
-            </div>
-            <div *ngIf="!isAgeValid(i)">
+          </div>
+
+          <div class="age">
+            <label for="age">AGE:</label>
+            <input
+              type="number"
+              [(ngModel)]="ages[i]"
+              name="age{{ i }}"
+              #age="ngModel"
+              min="5"
+              max="99"
+              required
+            />
+            <div *ngIf="age.invalid && (age.dirty || age.touched)">
               <p class="error-message">Age should be between 5 and 99.</p>
             </div>
-            
           </div>
-      
-          <button type="button" [disabled]="!areAllFieldsFilled()" (click)="display()">
-            book
-          </button>
-       
-      </div>
+          
+        </div>
+
+        <div class="center-button-container">
+          <button type="submit" [disabled]="!myForm.valid">BOOK</button>
+        </div>
+      </form>
     </div>
   </div>
-
+</div>
 
 <div class="upi-dialog" *ngIf="showUpiForm">
   <form (ngSubmit)="submitUpiForm()">

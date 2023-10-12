@@ -98,7 +98,9 @@ export class FormComponent implements OnInit {
     if (this.areAllFieldsFilled() && areAgesValid) {
       // Your logic here for form submission
       this.busSer.send_form(this.names, this.ages, this.gender);
-      console.log('Nma', this.names, this.ages, this.gender);
+      console.log('Name:', this.names);
+      console.log('Ages:', this.ages);
+      console.log('Gender:', this.gender);
       this.showUpiForm = true;
     } else {
       alert('Please enter all fields and ensure all ages are between 5 and 99.');
@@ -109,18 +111,36 @@ export class FormComponent implements OnInit {
     return age >= 5 && age <= 99;
   }
   areAllFieldsFilled(): boolean {
-    // Check if all arrays have the same length
-    return (
-      this.names.length > 0 &&
-      this.names.length === this.select.length &&
-      this.ages.length === this.select.length &&
-      this.gender.length === this.select.length &&
-      // Check if all individual values are truthy (not empty or null)
-      this.names.every(name => !!name && name.trim() !== '') &&
-      this.ages.every(age => !!age ) &&
-      this.gender.every(g => typeof g === 'string' && g.trim() !== '')
+    const isFilled =
+    this.names.length > 0 &&
+    this.names.length === this.select.length &&
+    this.ages.length === this.select.length &&
+    this.gender.length === this.select.length &&
+    // Check if all individual values are truthy (not empty or null)
+    this.names.every(name => {
+      const isValid = typeof name === 'string' && name !== '';
+      if (!isValid) {
+        console.log('Invalid name:', name);
+      }
+      return isValid;
+    }) &&
+    this.ages.every(age => {
+      const isValid = age !== null && age !== undefined;
+      if (!isValid) {
+        console.log('Invalid age:', age);
+      }
+      return isValid;
+    }) &&
+    this.gender.every(g => {
+      const isValid = typeof g === 'string' && g.trim() !== '';
+      if (!isValid) {
+        console.log('Invalid gender:', g);
+      }
+      return isValid;
+    });
 
-    );
+  console.log('Form filled:', isFilled);
+  return isFilled;
   }
   submitUpiForm() {
     if (this.validateUpiId(this.upiId)) {
